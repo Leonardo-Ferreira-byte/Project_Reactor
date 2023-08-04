@@ -1,0 +1,3 @@
+Capítulos do Fogler envolvendo difusão
+Algoritmo Genetico
+shooting method

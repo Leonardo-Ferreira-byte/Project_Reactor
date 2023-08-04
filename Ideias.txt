@@ -1,0 +1,6 @@
+Considerar tanto variação axial da temperatura(ao longo do reator) como variação temporal.
+
+
+Variação espacial: Modeling of Hydrodesulfurization (HDS),
+Hydrodenitrogenation (HDN), and the Hydrogenation of
+Aromatics (HDA) in a Vacuum Gas Oil Hydrotreater
