@@ -74,15 +74,16 @@ def rHDN_NB(CN_NB, T):
     return k(3.62e6, 164.94, T) * CN_NB**1.5
 
 
-def rHDA(pH2, CA, CA0, T):
+def rHDA(pH2, CA, CNp, T):
     """ Calculate the HDA reaction rate.
     Args:
         pH2 (float): partial pressure of hydrogen in [MPa]
         CA (float): Concentration of aromatic compounds in [mol/cm^3].
+        CN (float): Concentration of naphtenes compounds in [mol/cm^3].
         T (float): Temperature in [K].
 
     Returns:
         float: the HDA reaction rate in [mol/s.cm^3].
     """
 
-    return k(231.945, 80.1, T) * pH2 * CA - k(1.266e5, 112.6, T)*(CA0-CA)
+    return k(231.945, 80.1, T) * pH2 * CA - k(1.266e5, 112.6, T) * CNp
