@@ -1,5 +1,22 @@
 import numpy as np
 
+#[0] = S
+
+#[1] = NNB
+
+#[2] = NB
+
+#[3] = A
+
+#[4] = H2
+
+#[5] = H2S
+
+#[6] = Np
+
+# Component labels to use in arrays
+
+S, NNB, NB, A, H2, H2S, Np = np.arange(7)
 
 def k(k0, Ea, T, R=8.3145):
     """Calculate the cinetic constant of Arrhneius.
@@ -32,10 +49,10 @@ def fKH2S(T, k0=41769.8411, delta_Hads=2761, R=8.3145):
     return k0 * np.exp(delta_Hads / (R * T))
 
 
-def rHDS(CS, CH2, CH2S, T):
+def rHDS(c,T):
     """ Calculate the HDS reaction rate.
     Args:
-        CS (float): Concentration OF sulfur compounds in [mol/cm^3].
+        CS (float): Concentration of sulfur compounds in [mol/cm^3].
         CH2 (float): Concentration of hydrogen in [mol/cm^3].
         CH2S (float): Concentration of hydrogen sulfide in [mol/cm^3].
         T (float): Temperature in [K].
@@ -44,10 +61,10 @@ def rHDS(CS, CH2, CH2S, T):
         float: The HDS reaction rate in [mol/s].
     """
 
-    return k(4.266e9, 131.99, T) * CS * CH2**0.45/(1 + fKH2S(T) * CH2S)**2
+    return k(4.266e9, 131.99, T) * c[S] * c[H2]**0.45/(1 + fKH2S(T) * c[H2S])**2
 
 
-def rHDN_B(CN_NB, CN_B, T):
+def rHDN_B(c, T):
     """ Calculate the HDN_B reaction rate.
     Args:
         CN_NB (float): Concentration of non-basic-nitrogen compounds in [wt%].
@@ -58,10 +75,10 @@ def rHDN_B(CN_NB, CN_B, T):
         float: the HDN_NB reaction rate in [wt%/s].
     """
 
-    return  k(3.62e6, 164.94, T) * CN_NB**1.5 - k(3.66e11, 204.34, T) * CN_B**1.5 
+    return  k(3.62e6, 164.94, T) * c[NNB]**1.5 - k(3.66e11, 204.34, T) * c[NB]**1.5 
 
 
-def rHDN_NB(CN_NB, T):
+def rHDN_NB(c, T):
     """ Calculate the HDN_NB reaction rate.
     Args:
         CN_NB (float): Concentration of non-basic-nitrogen compounds in [wt%].
@@ -71,10 +88,10 @@ def rHDN_NB(CN_NB, T):
         float: the HDN_B reaction rate in [wt%/s].
     """
 
-    return k(3.62e6, 164.94, T) * CN_NB**1.5
+    return k(3.62e6, 164.94, T) * c[NNB]**1.5
 
 
-def rHDA(pH2, CA, CNp, T):
+def rHDA(c,pH2, T):
     """ Calculate the HDA reaction rate.
     Args:
         pH2 (float): partial pressure of hydrogen in [MPa]
@@ -86,4 +103,31 @@ def rHDA(pH2, CA, CNp, T):
         float: the HDA reaction rate in [mol/s.cm^3].
     """
 
-    return k(231.945, 80.1, T) * pH2 * CA - k(1.266e5, 112.6, T) * CNp
+    return k(231.945, 80.1, T) * pH2 * c[A] - k(1.266e5, 112.6, T) * c[Np]
+
+
+def ft_reactants(r, c, pH2, T):
+
+    ni = [-1, -1, 1, -1, -15, 9, 1]
+
+    #checar sinal
+
+    fS = -ni[0] * rHDS(c,T)
+    fNB = -ni[1] * rHDN_NB(c, T)
+    fNNB = -ni[2] * rHDN_B(c, T)
+    fA = -ni[3] * rHDA(c, pH2, T)
+    fH2 = -ni[4] * rHDS(c, T)
+    fH2S = -ni[5] * rHDS(c, T)
+    fNp = -ni[6] * rHDA(c, pH2, T)
+
+    return np.array([fS, fNB, fNNB, fA, fH2, fH2S, fNp])
+
+
+def effective_reactions(r, c, pH2, T):
+
+    rr1 = rHDS(c,T)
+    rr2 = rHDN_NB(c, T)
+    rr3 = rHDN_B(c, T)
+    rr4 = rHDA(c, pH2, T)
+
+    return np.array([rr1, rr2, rr3, rr4])
