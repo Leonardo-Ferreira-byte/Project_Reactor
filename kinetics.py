@@ -75,7 +75,8 @@ def rHDN_B(c, T):
         float: the HDN_NB reaction rate in [wt%/s].
     """
 
-    return  k(3.62e6, 164.94, T) * c[NNB]**1.5 - k(3.66e11, 204.34, T) * c[NB]**1.5 
+    #return  k(3.62e6, 164.94, T) * c[NNB]**1.5 - k(3.66e11, 204.34, T) * c[NB]**1.5 
+    return 1.20/3600 * c[NNB]**1.5 -  4.85/3600 * c[NB]**1.5
 
 
 def rHDN_NB(c, T):
@@ -88,7 +89,8 @@ def rHDN_NB(c, T):
         float: the HDN_B reaction rate in [wt%/s].
     """
 
-    return k(3.62e6, 164.94, T) * c[NNB]**1.5
+    #return k(3.62e6, 164.94, T) * c[NNB]**1.5
+    return  1.20/3600* c[NNB]**1.5
 
 
 def rHDA(c,pH2, T):
