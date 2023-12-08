@@ -106,6 +106,7 @@ def rHDA(c,pH2, T):
     """
 
     return k(231.945, 80.1, T) * pH2 * c[A] - k(1.266e5, 112.6, T) * c[Np]
+    #return k(1.041e5, 121.40,T)* pH2 * c[A] - k(8.805e9,186.40,T)*(1-c[A])
 
 
 def ft_reactants(r, c, pH2, T):
