@@ -1,18 +1,8 @@
 import numpy as np
+from data import Mm1
+from solubility import D1L, D2L, D4L
 
-#[0] = S
-
-#[1] = NNB
-
-#[2] = NB
-
-#[3] = A
-
-#[4] = H2
-
-#[5] = H2S
-
-#[6] = Np
+rhob = 0.8163 #bulk density in g/cm^3
 
 # Component labels to use in arrays
 
@@ -49,7 +39,7 @@ def fKH2S(T, k0=41769.8411, delta_Hads=2761, R=8.3145):
     return k0 * np.exp(delta_Hads / (R * T))
 
 
-def rHDS(c,T):
+def rHDS_fun(c,T):
     """ Calculate the HDS reaction rate.
     Args:
         CS (float): Concentration of sulfur compounds in [mol/cm^3].
@@ -58,13 +48,13 @@ def rHDS(c,T):
         T (float): Temperature in [K].
 
     Returns:
-        float: The HDS reaction rate in [mol/s].
+        float: The HDS reaction rate in [mol/s.g].
     """
 
     return k(4.266e9, 131.99, T) * c[S] * c[H2]**0.45/(1 + fKH2S(T) * c[H2S])**2
 
 
-def rHDN_B(c, T):
+def rHDN_B_fun(c, T, rhoL):
     """ Calculate the HDN_B reaction rate.
     Args:
         CN_NB (float): Concentration of non-basic-nitrogen compounds in [wt%].
@@ -72,28 +62,28 @@ def rHDN_B(c, T):
         T (float): Temperature in [K].
 
     Returns:
-        float: the HDN_NB reaction rate in [wt%/s].
+        float: the HDN_NB reaction rate in [mol/cm^3.s].
     """
 
-    #return  k(3.62e6, 164.94, T) * c[NNB]**1.5 - k(3.66e11, 204.34, T) * c[NB]**1.5 
-    return 1.20/3600 * c[NNB]**1.5 -  4.85/3600 * c[NB]**1.5
+    return  (k(3.62e6, 164.94, T) * (c[NNB] * Mm1/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm1/rhoL)**1.5)*rhoL/Mm1
+    #return 1.20/3600 * (c[NNB] * Mm1/rhoL)**1.5 -  4.3/360 *(c[NB] * Mm1/rhoL)**1.5 * rhoL/Mm1
 
 
-def rHDN_NB(c, T):
+def rHDN_NB_fun(c, T, rhoL):
     """ Calculate the HDN_NB reaction rate.
     Args:
         CN_NB (float): Concentration of non-basic-nitrogen compounds in [wt%].
         T (float): Temperature in [K].
 
     Returns:
-        float: the HDN_B reaction rate in [wt%/s].
+        float: the HDN_B reaction rate in [mol/cm3.s].
     """
 
-    #return k(3.62e6, 164.94, T) * c[NNB]**1.5
-    return  1.20/3600* c[NNB]**1.5
+    return (k(3.62e6, 164.94, T) * (c[NNB]* Mm1/rhoL)**1.5)*rhoL/Mm1
+    #return  1.20/3600 * (c[NNB] * Mm1/rhoL)**1.5
 
 
-def rHDA(c,pH2, T):
+def rHDA_fun(c,pH2, T):
     """ Calculate the HDA reaction rate.
     Args:
         pH2 (float): partial pressure of hydrogen in [MPa]
@@ -106,31 +96,26 @@ def rHDA(c,pH2, T):
     """
 
     return k(231.945, 80.1, T) * pH2 * c[A] - k(1.266e5, 112.6, T) * c[Np]
-    #return k(1.041e5, 121.40,T)* pH2 * c[A] - k(8.805e9,186.40,T)*(1-c[A])
 
 
-def ft_reactants(r, c, pH2, T):
+def ft_reactants(r, c, pH2, T, rhoL):
 
-    ni = [-1, -1, 1, -1, -15, 9, 1]
-
-    #checar sinal
-
-    fS = -ni[0] * rHDS(c,T)
-    fNB = -ni[1] * rHDN_NB(c, T)
-    fNNB = -ni[2] * rHDN_B(c, T)
-    fA = -ni[3] * rHDA(c, pH2, T)
-    fH2 = -ni[4] * rHDS(c, T)
-    fH2S = -ni[5] * rHDS(c, T)
-    fNp = -ni[6] * rHDA(c, pH2, T)
+    fS = 1 * rHDS_fun(c,T) / D1L(T) / rhob
+    fNB =  1 * rHDN_NB_fun(c, T, rhoL) / D1L(T)
+    fNNB = 1 * rHDN_B_fun(c, T, rhoL) / D1L(T)
+    fA = 1 * rHDA_fun(c, pH2, T) / D1L(T)
+    fH2 = (15 * rHDS_fun(c, T) /rhob + 6 * rHDN_NB_fun(c, T, rhoL) + 2 * rHDN_B_fun(c, T, rhoL) + 3 * rHDA_fun(c, pH2, T)) / D2L(T)
+    fH2S = -9 * rHDS_fun(c, T) / D4L(T) / rhob
+    fNp = -1 * rHDA_fun(c, pH2, T) / D1L(T)
 
     return np.array([fS, fNB, fNNB, fA, fH2, fH2S, fNp])
 
 
-def effective_reactions(r, c, pH2, T):
+def effective_reactions(r, c, pH2, T, rhoL):
 
-    rr1 = rHDS(c,T)
-    rr2 = rHDN_NB(c, T)
-    rr3 = rHDN_B(c, T)
-    rr4 = rHDA(c, pH2, T)
+    rr1 = rHDS_fun(c,T)
+    rr2 = rHDN_NB_fun(c, T, rhoL)
+    rr3 = rHDN_B_fun(c, T, rhoL)
+    rr4 = rHDA_fun(c, pH2, T)
 
     return np.array([rr1, rr2, rr3, rr4])

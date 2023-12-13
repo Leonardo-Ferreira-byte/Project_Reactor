@@ -16,7 +16,7 @@ def deltarhoP(rho0, P):
 
     '''
 
-    return ((0.167 + (16.181*10**(-0.0425*rho0)))*(P/1000) - 0.01*(0.299 + (263*10**(-0.0603*rho0)))*(P/1000)**2)
+    return (0.167 + (16.181*10**(-0.0425*rho0))) * (P/1000) - 0.01*(0.299 + (263*10**(-0.0603*rho0))) * (P/1000)**2
 
 
 def deltarhoT(rho0, P, T):
@@ -40,7 +40,8 @@ def deltarhoT(rho0, P, T):
 
     '''
 
-    return ((0.0133 + 152.4*(rho0 + deltarhoP(rho0, P))**(-2.45)))*(T-520) - (8.1*10**(-6) - 0.0622*10**((-0.764)*(rho0 + deltarhoP(rho0, P))))*(T-520)**2
+    return (0.0133 + 152.4*(rho0 + deltarhoP(rho0, P))**(-2.45)) * (T-520)\
+    - (8.1e-6 - 0.0622*10**(-0.764*(rho0 + deltarhoP(rho0, P)))) * (T-520)**2
 
 
 def oil_density(rho0, P, T):
@@ -64,8 +65,8 @@ def oil_density(rho0, P, T):
 
     '''
 
-    rho0 = rho0/16.018
+    rho0 = rho0/0.016018
     T = 1.8*T
-    P = P*14.7/101325
+    P = P*14.695/101325
 
     return (rho0 + deltarhoP(rho0, P) - deltarhoT(rho0, P, T))*0.016018

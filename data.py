@@ -6,7 +6,7 @@ alfa2 = 0.4 #second coeficient of gas-liquid mass transfer
 
 T_MeABP = (476 + 273.15)*1.8 # Mean average boiling point of oil in °R.
 
-roW = 999.007 #density of water at 15.6°C in kg/m^3.
+roW = 0.9976 #density of water at 15.6°C in g/cm^3.
 
 def specific_gravity(API):
 

@@ -25,7 +25,7 @@ def mi_L(T, API):
       return 3.141e10*(T - 460)**(-3.444)*((np.log10(API))**a)/100
 
 
-def D1L(T, API):
+def D1L(T, API=22):
 
       '''Gets the coefficient of diffusivity of the organic sulfur compound in solution in cm^2/s.
 
@@ -42,7 +42,7 @@ def D1L(T, API):
 
       return (8.93e-8*(v1**0.267)*T)/((v1**0.433)*(mi_L(T, API)*100))
 
-def D2L(T, API):
+def D2L(T, API=22):
 
       '''Gets the coefficient of diffusivity of hydrogen in solution in cm^2/s.
 
@@ -59,7 +59,7 @@ def D2L(T, API):
 
       return (8.93e-8*(v1**0.267)*T)/((v2**0.433)*(mi_L(T, API)*100))
 
-def D4L(T, API):
+def D4L(T, API=22):
 
       '''Gets the coefficient of diffusivity of hydrogen sulfite in solution in cm^2/s.
 
