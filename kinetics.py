@@ -57,30 +57,30 @@ def rHDS_fun(c,T):
 def rHDN_B_fun(c, T, rhoL):
     """ Calculate the HDN_B reaction rate.
     Args:
-        CN_NB (float): Concentration of non-basic-nitrogen compounds in [wt%].
-        CN_B (float): Concentration of basic-nitrogen in [wt%].
+        CN_NB (float): Concentration of non-basic-nitrogen compounds in [mol/cm^3].
+        CN_B (float): Concentration of basic-nitrogen in [mol/cm^3].
         T (float): Temperature in [K].
 
     Returns:
         float: the HDN_NB reaction rate in [mol/cm^3.s].
     """
 
-    return  (k(3.62e6, 164.94, T) * (c[NNB] * Mm1/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm1/rhoL)**1.5)*rhoL/Mm1
-    #return 1.20/3600 * (c[NNB] * Mm1/rhoL)**1.5 -  4.3/360 *(c[NB] * Mm1/rhoL)**1.5 * rhoL/Mm1
+    #return  (k(3.62e6, 164.94, T) * (c[NNB] * Mm1/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm1/rhoL)**1.5)
+    return (k(3.62e6, 164.94, T) * (c[NNB] * Mm1/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm1/rhoL)**1.5)*rhoL/Mm1
 
 
 def rHDN_NB_fun(c, T, rhoL):
     """ Calculate the HDN_NB reaction rate.
     Args:
-        CN_NB (float): Concentration of non-basic-nitrogen compounds in [wt%].
+        CN_NB (float): Concentration of non-basic-nitrogen compounds in [mol/cm^3].
         T (float): Temperature in [K].
 
     Returns:
         float: the HDN_B reaction rate in [mol/cm3.s].
     """
 
-    return (k(3.62e6, 164.94, T) * (c[NNB]* Mm1/rhoL)**1.5)*rhoL/Mm1
-    #return  1.20/3600 * (c[NNB] * Mm1/rhoL)**1.5
+    #return (k(3.62e6, 164.94, T) * (c[NNB]* Mm1/rhoL)**1.5)
+    return  (k(3.62e6, 164.94, T) * (c[NNB]* Mm1/rhoL)**1.5)*rhoL/Mm1
 
 
 def rHDA_fun(c,pH2, T):
@@ -100,12 +100,12 @@ def rHDA_fun(c,pH2, T):
 
 def ft_reactants(r, c, pH2, T, rhoL):
 
-    fS = 1 * rHDS_fun(c,T) / D1L(T) / rhob
+    fS = 1 * rHDS_fun(c,T) * rhob / D1L(T)
     fNB =  1 * rHDN_NB_fun(c, T, rhoL) / D1L(T)
-    fNNB = 1 * rHDN_B_fun(c, T, rhoL) / D1L(T)
+    fNNB = -1 * rHDN_B_fun(c, T, rhoL) / D1L(T)
     fA = 1 * rHDA_fun(c, pH2, T) / D1L(T)
-    fH2 = (15 * rHDS_fun(c, T) /rhob + 6 * rHDN_NB_fun(c, T, rhoL) + 2 * rHDN_B_fun(c, T, rhoL) + 3 * rHDA_fun(c, pH2, T)) / D2L(T)
-    fH2S = -9 * rHDS_fun(c, T) / D4L(T) / rhob
+    fH2 = (15 * rHDS_fun(c, T) * rhob + 6 * rHDN_NB_fun(c, T, rhoL) + 2 * rHDN_B_fun(c, T, rhoL) + 3 * rHDA_fun(c, pH2, T)) / D2L(T)
+    fH2S = -9 * rHDS_fun(c, T * rhob) / D4L(T)
     fNp = -1 * rHDA_fun(c, pH2, T) / D1L(T)
 
     return np.array([fS, fNB, fNNB, fA, fH2, fH2S, fNp])
