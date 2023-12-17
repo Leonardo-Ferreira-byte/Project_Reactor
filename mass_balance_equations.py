@@ -48,7 +48,7 @@ def k4L_aL_fun(rho0, P, T, API, GL):
      
    return D4L(T, API)*alfa1*(GL/mi_L(T, API))**alfa2*(mi_L(T, API)/(oil_density(rho0,P,T)*D4L(T, API)))**(0.5)
 
-def k1S_fun(rho0, P, T, API, GL, aS):
+def k1SaS_fun(rho0, P, T, API, GL, aS):
 
     '''Get the mass transfer coefficient from liquid to particle for organic sulfur compound.
     
@@ -68,9 +68,9 @@ def k1S_fun(rho0, P, T, API, GL, aS):
         k1S: float
              Mass transfer coefficient from liquid to particle in s^-1.'''
 
-    return D1L(T, API)*aS*1.8*(GL/(mi_L(T, API)*aS))**0.5*(mi_L(T, API)/(oil_density(rho0,P,T)*D1L(T, API)))**(1/3)
+    return D1L(T, API)*aS*1.8*(GL/(mi_L(T, API)*aS))**0.5*(mi_L(T, API)/(oil_density(rho0,P,T)*D1L(T, API)))**(1/3) * aS
 
-def k2S_fun(rho0, P, T, API, GL, aS):
+def k2SaS_fun(rho0, P, T, API, GL, aS):
 
     '''Get the mass transfer coefficient from liquid to particle for hydrogen.
     
@@ -90,9 +90,9 @@ def k2S_fun(rho0, P, T, API, GL, aS):
         k2S: float
              Mass transfer coefficient from liquid to particle in s^-1.'''
 
-    return D2L(T, API)*aS*1.8*(GL/(mi_L(T, API)*aS))**0.5*(mi_L(T, API)/(oil_density(rho0,P,T)*D2L(T, API)))**(1/3)
+    return D2L(T, API)*aS*1.8*(GL/(mi_L(T, API)*aS))**0.5*(mi_L(T, API)/(oil_density(rho0,P,T)*D2L(T, API)))**(1/3) * aS
 
-def k4S_fun(rho0, P, T, API, GL, aS):
+def k4SaS_fun(rho0, P, T, API, GL, aS):
 
     '''Get the mass transfer coefficient from liquid to particle for hydrogen sulfite.
     
@@ -112,5 +112,5 @@ def k4S_fun(rho0, P, T, API, GL, aS):
         k4sat: float
              Mass transfer coefficient from liquid to particle in s^-1.'''
 
-    return D4L(T, API) * aS*1.8 * (GL/(mi_L(T, API)*aS))**0.5 * (mi_L(T, API)/(oil_density(rho0,P,T)*D4L(T, API)))**(1/3)
+    return D4L(T, API) * aS*1.8 * (GL/(mi_L(T, API)*aS))**0.5 * (mi_L(T, API)/(oil_density(rho0,P,T)*D4L(T, API)))**(1/3) * aS
 
