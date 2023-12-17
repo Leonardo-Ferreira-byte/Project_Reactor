@@ -83,7 +83,7 @@ class Concentrations(Fluid):
 
     def __init__(self, cl0, heterogeneous = False, n_points = 3, ivp_tol=1e-16, method = "lm", **options):
 
-        super().__init__(T = 653.15, P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163, heterogeneous = heterogeneous)
+        super().__init__(heterogeneous = heterogeneous)
 
         self.cs0 = cl0
         self.method = method
@@ -156,7 +156,7 @@ class Simulator(Fluid):
 
     def __init__(self, y0, n_points_integration=100, heterogeneous = False, **options):
 
-        super().__init__(T =653.15 , P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163)
+        super().__init__()
 
         y0[0:4] = np.vectorize(self.wt_to_molar)(y0[0:4])
         self.y0 = y0
@@ -230,4 +230,37 @@ class Simulator(Fluid):
     def get_outlet_fluid_conditions(self):
 
         return self.sol.y[:,-1]
+    
+    def get_evectiveness_profile(self, surface_concentrations_profiles):
+
+
+        effectiveness_profiles = np.empty((0,4))
+
+        eff = np.ones(4)
+
+        for i in range(self.n_points_integration):
+
+            if self.heterogeneous:
+
+                cs = surface_concentrations_profiles.T[i]
+
+                if i == 0:
+
+                        root_method = 'lm'
+                        cs[cs == 0] = self.concentrations.ivp_tol
+                        y0 = np.column_stack((cs,) * (self.concentrations.n_points + 1))
+
+                else:
+                    y0 = self.concentrations.collocation.y
+                    root_method = "hybr"
+
+                args_ft = (cs, self.p5G_profile[i], self.T, self.rhoL)
+                self.concentrations.collocation.collocate(y0, args=args_ft, method=root_method)
+
+                args_reactions = (self.p5G_profile[i], self.T, self.rhoL)
+                eff = self.concentrations.collocation.effectiveness(effective_reactions, args_reactions)
+
+            effectiveness_profiles = np.vstack((effectiveness_profiles , eff))
+
+        return effectiveness_profiles.T
 
