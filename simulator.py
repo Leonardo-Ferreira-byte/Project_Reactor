@@ -31,7 +31,7 @@ class Reactor:
     
 class Fluid:
 
-    def __init__(self, T =653.15 , P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163):
+    def __init__(self, T =653.15 , P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163, heterogeneous  = False):
 
         self.reactor = Reactor()
         self.T = T
@@ -41,6 +41,7 @@ class Fluid:
         self.rho0 = d15_6 * roW
         self.rhoL = oil_density(self.rho0,P,T)
         self.rhob = rhob
+        self.heterogeneous = heterogeneous
         self.henry_H2 = Henry_coefficient2_fun(self.rho0, P,T)
         self.henry_H2S = Henry_coefficient4_fun(self.rho0, P,T)
         self.uL = self.LHSV * self.reactor.z / 3600
@@ -80,20 +81,19 @@ class Fluid:
     
 class Concentrations(Fluid):
 
-    def __init__(self, cl0, heterogeneous = False, n_points = 3, ivp_tol=1e-16, method = "hybr", **options):
+    def __init__(self, cl0, heterogeneous = False, n_points = 3, ivp_tol=1e-16, method = "lm", **options):
 
-        super().__init__(T = 653.15, P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163)
+        super().__init__(T = 653.15, P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163, heterogeneous = heterogeneous)
 
         self.cs0 = cl0
-        self.heterogeneous = heterogeneous
         self.method = method
 
-        if heterogeneous:
+        if self.heterogeneous:
 
             self.collocation = OrthogonalCollocation(
                     Concentrations._transport_eq,
                     Concentrations._bc_eq,
-                    n_points, 3, x0=0, x1= dp/2)
+                    n_points, 3, x0=0, x1= self.reactor.dp/2)
             
         self.n_points = n_points
         self.ivp_tol = ivp_tol
@@ -117,12 +117,12 @@ class Concentrations(Fluid):
             if z == 0:
 
                 root_method = 'lm'
-                cs[cs == 0] = self.ivp_rtol
+                cs[cs == 0] = self.ivp_tol
                 y0 = np.column_stack((cs,) * (self.n_points + 1))
 
             else:
                 y0 = self.collocation.y
-                root_method = 'lm'
+                root_method = "hybr"
 
             args_ft = (cs, cl[7], self.T, self.rhoL)
             self.collocation.collocate(y0, args=args_ft, method=root_method)
@@ -145,25 +145,24 @@ class Concentrations(Fluid):
         F[5] =  -9 * eff[0] * self.rhob * rHDS   - self.kSaS_H2S * (cl[5] - cs[5])
         F[6] =  -1 * eff[3] * rHDA -  self.kSaS_oil * (cl[6] - cs[6])
 
-
-        return F  
+        return F
     
     def get_surface_concentrations(self, cl,z):
 
         self.cs = root(self.mass_balance_surface, self.cs0, (cl,z), method = self.method).x
         self.cs0 = self.cs
 
-class Main(Fluid):
+class Simulator(Fluid):
 
-    def __init__(self, y0,z=31.54, n_points_integration=100, **options):
+    def __init__(self, y0, n_points_integration=100, heterogeneous = False, **options):
 
         super().__init__(T =653.15 , P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163)
 
         y0[0:4] = np.vectorize(self.wt_to_molar)(y0[0:4])
         self.y0 = y0
-        self.concentrations = Concentrations(y0[:-2])
+        self.concentrations = Concentrations(y0[:-2], heterogeneous)
         self.sol = None
-        self.z = z
+        self.z = self.reactor.z
         self.n_points_integration = n_points_integration
         self.cL0_profile = None
         self.cL1_profile = None
@@ -204,5 +203,31 @@ class Main(Fluid):
         t_eval = np.linspace(0, self.z, self.n_points_integration)
         self.sol = solve_ivp(self.dy, t_span=t_span, y0=self.y0, t_eval=t_eval, method = "RK45")
         (self.cL0_profile,  self.cL1_profile, self.cL2_profile, self.cL3_profile, self.cL4_profile, self.cL5_profile, self.cL6_profile,
-        self.p4G_profile, self.p5G_profile) = self.sol.y 
+        self.p4G_profile, self.p5G_profile) = self.sol.y
+
+    
+    def get_surface_concentrations_profiles(self):
+
+        surface_concentrations_profiles = np.empty((0,7))
+
+        self.concentrations.cs0 = self.sol.y[:-2][:,0]
+
+        for i in range(self.n_points_integration):
+
+            if i == 0:
+
+                self.concentrations.get_surface_concentrations(self.sol.y[:,i],0)
+
+            else:
+
+                self.concentrations.get_surface_concentrations(self.sol.y[:,i],None)
+
+            surface_concentrations_profiles = np.vstack((surface_concentrations_profiles, self.concentrations.cs))
+
+        return surface_concentrations_profiles.T
+
+
+    def get_outlet_fluid_conditions(self):
+
+        return self.sol.y[:,-1]
 

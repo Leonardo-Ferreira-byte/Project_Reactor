@@ -101,13 +101,23 @@ def rHDA_fun(c,pH2, T, rhoL):
 
 def ft_reactants(r, c, pH2, T, rhoL):
 
-    fS = 1 * rHDS_fun(c,T) * rhob / D1L(T)
-    fNB =  1 * rHDN_NB_fun(c, T, rhoL) / D1L(T)
-    fNNB = -1 * rHDN_B_fun(c, T, rhoL) / D1L(T)
-    fA = 1 * rHDA_fun(c, pH2, T, rhoL) / D1L(T)
-    fH2 = (15 * rHDS_fun(c, T) * rhob + 6 * rHDN_NB_fun(c, T, rhoL) + 2 * rHDN_B_fun(c, T, rhoL) + 3 * rHDA_fun(c, pH2, T, rhoL)) / D2L(T)
-    fH2S = -9 * rHDS_fun(c, T) * rhob / D4L(T)
-    fNp = -1 * rHDA_fun(c, pH2, T, rhoL) / D1L(T)
+    diff_oil = D1L(T)
+    diff_H2 = D2L(T)
+    diff_H2S = D4L(T)
+
+    rHDS = rHDS_fun(c,T)
+    rHDN_NB = rHDN_NB_fun(c, T, rhoL)
+    rHDN_B = rHDN_B_fun(c, T, rhoL)
+    rHDA = rHDA_fun(c, pH2, T, rhoL)
+
+
+    fS = 1 * rHDS * rhob / diff_oil
+    fNB =  1 * rHDN_NB / diff_oil
+    fNNB = -1 * rHDN_B / diff_oil
+    fA = 1 * rHDA / diff_oil
+    fH2 = (15 * rHDS * rhob + 6 * rHDN_NB + 2 * rHDN_B + 3 * rHDA) / diff_H2
+    fH2S = -9 * rHDS * rhob / diff_H2S
+    fNp = -1 * rHDA/ diff_oil
 
     return np.array([fS, fNB, fNNB, fA, fH2, fH2S, fNp])
 
