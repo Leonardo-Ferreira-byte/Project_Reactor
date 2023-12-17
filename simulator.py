@@ -83,7 +83,7 @@ class Concentrations(Fluid):
 
     def __init__(self, cl0, heterogeneous = False, n_points = 3, ivp_tol=1e-16, method = "lm", **options):
 
-        super().__init__(heterogeneous = heterogeneous)
+        super().__init__(heterogeneous = heterogeneous, **options)
 
         self.cs0 = cl0
         self.method = method
@@ -154,13 +154,13 @@ class Concentrations(Fluid):
 
 class Simulator(Fluid):
 
-    def __init__(self, y0, n_points_integration=100, heterogeneous = False, **options):
+    def __init__(self, y0, n_points = 3,n_points_integration=100, heterogeneous = False, **options):
 
-        super().__init__()
+        super().__init__(heterogeneous = heterogeneous, **options)
 
         y0[0:4] = np.vectorize(self.wt_to_molar)(y0[0:4])
         self.y0 = y0
-        self.concentrations = Concentrations(y0[:-2], heterogeneous)
+        self.concentrations = Concentrations(y0[:-2], heterogeneous, n_points)
         self.sol = None
         self.z = self.reactor.z
         self.n_points_integration = n_points_integration
