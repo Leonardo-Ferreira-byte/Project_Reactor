@@ -1,6 +1,6 @@
-from data import alfa1, alfa2
-from density_correlations import oil_density
-from solubility import mi_L, D1L, D2L, D4L
+from reactor.data import alfa1, alfa2
+from reactor.density_correlations import oil_density
+from reactor.solubility import mi_L, D1L, D2L, D4L
 
 def k2L_aL_fun(rho0, P, T, API, GL): 
     

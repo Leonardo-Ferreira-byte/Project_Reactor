@@ -1,10 +1,10 @@
 import numpy as np
-from density_correlations import oil_density
-from data import roW, d15_6, Mm1
-from solubility import Henry_coefficient2_fun, Henry_coefficient4_fun
-from mass_balance_equations import k1SaS_fun, k2SaS_fun, k4SaS_fun, k2L_aL_fun, k4L_aL_fun
-from kinetics import rHDS_fun, rHDN_NB_fun, rHDN_B_fun, rHDA_fun, ft_reactants, effective_reactions
-from bvp import OrthogonalCollocation
+from reactor.density_correlations import oil_density
+from reactor.data import roW, d15_6, Mm1
+from reactor.solubility import Henry_coefficient2_fun, Henry_coefficient4_fun
+from reactor.mass_transfer import k1SaS_fun, k2SaS_fun, k4SaS_fun, k2L_aL_fun, k4L_aL_fun
+from reactor.kinetics import rHDS_fun, rHDN_NB_fun, rHDN_B_fun, rHDA_fun, ft_reactants, effective_reactions
+from reactor.bvp import OrthogonalCollocation
 from scipy.integrate import solve_ivp
 from scipy.optimize import root
 
@@ -31,7 +31,7 @@ class Reactor:
     
 class Fluid:
 
-    def __init__(self, T =653.15 , P = 5.3e5, fi = 356, LHSV=2, API = 22, rhob = 0.8163, heterogeneous  = False):
+    def __init__(self, T =653.15 , P = 5.3, fi = 356, LHSV=2, API = 22, rhob = 0.8163, heterogeneous  = False):
 
         self.reactor = Reactor()
         self.T = T
@@ -149,8 +149,10 @@ class Concentrations(Fluid):
     
     def get_surface_concentrations(self, cl,z):
 
-        self.cs = root(self.mass_balance_surface, self.cs0, (cl,z), method = self.method).x
-        self.cs0 = self.cs
+        cs = root(self.mass_balance_surface, self.cs0, (cl,z), method = self.method).x
+        self.cs0 = cs
+
+        return cs
 
 class Simulator(Fluid):
 
@@ -190,10 +192,8 @@ class Simulator(Fluid):
     def dy(self, z, variables):
 
         pG4, pG5 = variables[-2:]
-
-        self.concentrations.get_surface_concentrations(variables[:-1], z)
         
-        solid_concentrations = self.concentrations.cs
+        solid_concentrations = self.concentrations.get_surface_concentrations(variables[:-1], z)
 
         return self.differential_equations(variables[:-2], pG4, pG5, solid_concentrations)
     
@@ -208,22 +208,13 @@ class Simulator(Fluid):
     
     def get_surface_concentrations_profiles(self):
 
-        surface_concentrations_profiles = np.empty((0,7))
-
-        self.concentrations.cs0 = self.sol.y[:-2][:,0]
-
-        for i in range(self.n_points_integration):
-
-            if i == 0:
-
-                self.concentrations.get_surface_concentrations(self.sol.y[:,i],0)
-
-            else:
-
-                self.concentrations.get_surface_concentrations(self.sol.y[:,i],None)
-
-            surface_concentrations_profiles = np.vstack((surface_concentrations_profiles, self.concentrations.cs))
-
+        surface_concentrations_profiles = np.apply_along_axis(
+            lambda row: self.concentrations.get_surface_concentrations(row, 0) 
+                        if np.array_equal(row, self.sol.y.T[0]) 
+                        else self.concentrations.get_surface_concentrations(row, None),
+            axis=1,
+            arr=self.sol.y.T
+        )
         return surface_concentrations_profiles.T
 
 

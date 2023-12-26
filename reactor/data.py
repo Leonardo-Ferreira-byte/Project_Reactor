@@ -34,7 +34,7 @@ vc_2 = 65.1 #critical specific volume of hydrogen in cm^3/mol.
 
 vc_4 = 98.6 #critical specific volume of hydrogen sulfite in cm^3/mol.
 
-vc1 = vc1_m*Mm1*62.42691047619048 #critical specific volume of the oil in cm^3/mol.
+vc1 = vc1_m*Mm1*62.4279 #critical specific volume of the oil in cm^3/mol.
 
 v1 = 0.285*vc1**1.048 #volume molar of the oil in cm^3/mol.
 

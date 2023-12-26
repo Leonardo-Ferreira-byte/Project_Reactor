@@ -67,6 +67,6 @@ def oil_density(rho0, P, T):
 
     rho0 = rho0/0.016018
     T = 1.8*T
-    P = P*14.695/101325
+    P = P*14.695e6/101325
 
     return (rho0 + deltarhoP(rho0, P) - deltarhoT(rho0, P, T))*0.016018
