@@ -1,6 +1,6 @@
 import numpy as np
 from reactor.density_correlations import oil_density
-from reactor.data import Vn
+from reactor.data import Vn, Patm
 
 def get_viscosity(T, API):
 
@@ -51,7 +51,7 @@ def lambda_H2(rho0, T):
     '''
     T = T - 273.15
 
-    ro_20 = oil_density(rho0, 0.101325, 293.15)
+    ro_20 = oil_density(rho0, Patm, 293.15)
 
     return  (-0.559729 - 0.42947e-3 * T + 3.07539e-3 * T/ro_20 + 1.94593e-6 * T**2 + 0.835783 / ro_20**2) 
 

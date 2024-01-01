@@ -1,3 +1,7 @@
+Patm = 0.101325  #Pressure in CNTP conditions in MPa
+
+T0 = 273.15  #Temperature in CNTP conditions in K
+
 alfa1 = 7 #first coeficient of gas-liquid mass transfer in cm^(-1.6).
 
 alfa2 = 0.4 #second coeficient of gas-liquid mass transfer

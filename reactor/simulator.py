@@ -1,6 +1,6 @@
 import numpy as np
 from reactor.density_correlations import oil_density
-from reactor.data import roW, vH2, vH2S, specific_gravity, get_volume_molar_oil
+from reactor.data import Patm, T0, roW, vH2, vH2S, specific_gravity, get_volume_molar_oil
 from reactor.solubility import get_viscosity, get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S, get_Henry_H2, get_Henry_H2S
 from reactor.mass_transfer import aS_fun, kiL_aL_fun, kiS_aS_fun
 from reactor.kinetics_diesel import rHDS_fun, rHDN_NB_fun, rHDN_B_fun, rHDA_fun, ft_reactants, effective_reactions
@@ -45,17 +45,17 @@ class Fluid:
         self.heterogeneous = heterogeneous
         self.vL = get_volume_molar_oil(T_MeABP, self.d15_6, self.Mm1)
         self.viscosity = get_viscosity(T, API)
-        self.diffusion_oil = get_diffusion_oil(T, self.vL, self.viscosity)
+        self.diffusion_oil = get_diffusion_oil(T, self.viscosity, self.vL)
         self.diffusion_H2 = get_diffusion_H2(T, self.viscosity, self.vL, vH2)
         self.diffusion_H2S = get_diffusion_H2S(T, self.viscosity, self.vL, vH2S)
         self.Henry_H2 = get_Henry_H2(self.rho0, P, T)
         self.Henry_H2S = get_Henry_H2S(self.rho0, P, T)
         self.uL = self.LHSV * self.reactor.z / 3600
         self.GL = self.rhoL * self.uL
-        self.uG = self.uL * (1e5 / self.P) * (self.T/273.15) * self.fi
+        self.uG = self.uL * (Patm / self.P) * (self.T/T0) * self.fi
         self.kLaL_H2 = kiL_aL_fun(self.diffusion_H2, self.viscosity, self.rho0, P, T, self.GL)
         self.kLaL_H2S = kiL_aL_fun(self.diffusion_H2S, self.viscosity, self.rho0, P, T, self.GL) 
-        self.kSaS_oil = ki_SaS_fun(self.diffusion_oil, self.viscosity, self.rho0, P, T, self.GL, self.reactor.aS)
+        self.kSaS_oil = kiS_aS_fun(self.diffusion_oil, self.viscosity, self.rho0, P, T, self.GL, self.reactor.aS)
         self.kSaS_H2 = kiS_aS_fun(self.diffusion_H2, self.viscosity, self.rho0, P, T, self.GL, self.reactor.aS)
         self.kSaS_H2S = kiS_aS_fun(self.diffusion_H2S, self.viscosity, self.rho0, P, T, self.GL, self.reactor.aS)
 
