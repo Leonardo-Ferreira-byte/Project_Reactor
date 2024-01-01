@@ -1,10 +1,10 @@
 import numpy as np
 from reactor.density_correlations import oil_density
-from reactor.data import Vn, v1, v2, v4
+from reactor.data import Vn
 
-def mi_L(T, API):
+def get_viscosity(T, API):
 
-      '''Function to get the viscosity of oil.
+      '''Function to get the viscosity of oil (Glaso, 1980).
 
       Parameters
       ----------
@@ -19,64 +19,23 @@ def mi_L(T, API):
       mi_L: float
             Viscosity of oil sulfite in g/(cm*s).'''
 
-      T = T*1.8
+      T = T * 1.8
+      a = 10.313 * np.log10(T - 460) - 36.447
+      return 3.141e10 * (T - 460)**(-3.444) * ((np.log10(API))**a) / 100
+ 
+def get_diffusion_oil(T, viscosity, vL):
 
-      a = 10.313*np.log10(T - 460) - 36.447
-      return 3.141e10*(T - 460)**(-3.444)*((np.log10(API))**a)/100
+      return 8.93e-8 * vL**0.267 *T / vL**0.433 / viscosity / 100
 
+def get_diffusion_H2(T, viscosity, vL, vH2):
 
-def D1L(T, API=22):
+      return 8.93e-8 * vL**0.267 * T / vH2**0.433 / viscosity / 100
 
-      '''Gets the coefficient of diffusivity of the organic sulfur compound in solution in cm^2/s.
+def get_diffusion_H2S(T, viscosity, vL, vH2S):
 
-      Parameters
-      ----------
-      T: int or float
-            Temperature in K.
+      return 8.93e-8 * vL**0.267 * T/ vH2S**0.433 / viscosity / 100
 
-      Returns
-      -------
-      D1L: float
-            The difusivity coefficient.
-      '''
-
-      return (8.93e-8*(v1**0.267)*T)/((v1**0.433)*(mi_L(T, API)*100))
-
-def D2L(T, API=22):
-
-      '''Gets the coefficient of diffusivity of hydrogen in solution in cm^2/s.
-
-      Parameters
-      ----------
-      T: int or float
-            Temperature in K.
-
-      Returns
-      -------
-      D2L: float
-            The difusivity coefficient.
-      '''
-
-      return (8.93e-8*(v1**0.267)*T)/((v2**0.433)*(mi_L(T, API)*100))
-
-def D4L(T, API=22):
-
-      '''Gets the coefficient of diffusivity of hydrogen sulfite in solution in cm^2/s.
-
-      Parameters
-      ----------
-      T: int or float
-            Temperature in K.
-
-      Returns
-      -------
-      D2L: float
-            The difusivity coefficient.
-    '''
-
-      return 8.93e-8*v1**0.267*T/v4**0.433/(mi_L(T, API)*100)
-
-def Lambda2(rho0, T):
+def lambda_H2(rho0, T):
 
     '''Function to get the solubility of hydrogen in hydrocarbon mixtures.
 
@@ -92,11 +51,11 @@ def Lambda2(rho0, T):
     '''
     T = T - 273.15
 
-    ro_20 = oil_density(rho0,0.101325,293.15)
+    ro_20 = oil_density(rho0, 0.101325, 293.15)
 
-    return  (-0.559729 - 0.42947e-3*T + 3.07539e-3*T/ro_20 + 1.94593e-6*T**2 + 0.835783/ro_20**2) 
+    return  (-0.559729 - 0.42947e-3 * T + 3.07539e-3 * T/ro_20 + 1.94593e-6 * T**2 + 0.835783 / ro_20**2) 
 
-def Henry_coefficient2_fun(rho0, P, T):
+def get_Henry_H2(rho0, P, T):
 
     '''Function to get the Henry coefficient of hydrogen in hydrocarbon mixtures.
      
@@ -115,9 +74,9 @@ def Henry_coefficient2_fun(rho0, P, T):
            The Henry coefficient for hydrogen in MPa.cm^3/mol. '''  
 
     
-    return Vn/(Lambda2(rho0,T)*oil_density(rho0,P,T)/1000)
+    return Vn / (lambda_H2(rho0,T) * oil_density(rho0,P,T) / 1000)
 
-def Lambda4(T):
+def lambda_H2S(T):
 
    '''Function to get the solubility of hydrogen sulfite in hidrocarbon mixtures.
 
@@ -133,9 +92,9 @@ def Lambda4(T):
     '''
    T = T - 273.15
 
-   return np.exp(3.3670 - 0.008470*T)
+   return np.exp(3.3670 - 0.008470 * T)
 
-def Henry_coefficient4_fun(rho0, P, T):
+def get_Henry_H2S(rho0, P, T):
 
     '''Function to get the Henry coefficient of hydrogen sulfite in hydrocarbon mixtures. 
 
@@ -156,4 +115,4 @@ def Henry_coefficient4_fun(rho0, P, T):
         H: float
            The Henry coefficient for hydrogen sulfite in MPa.cm^3/mol. '''  
 
-    return Vn/(Lambda4(T)*oil_density(rho0,P,T)/1000)
+    return Vn / (lambda_H2S(T) * oil_density(rho0,P,T) / 1000)

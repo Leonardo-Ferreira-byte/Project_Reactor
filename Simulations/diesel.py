@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from reactor.data import Mm1
 from reactor.simulator import Simulator, Fluid, Reactor
+
+
+Mm1 = Fluid().Mm1
 
 w0 = 0.02 #weigth fraction of sulfur.
 w1 = (1284 - 518)*1e-6 #weigth fraction of non basic nitrogen.
@@ -9,13 +11,13 @@ w2 = 518*1e-6 #weigth fraction of basic nitrogen.
 w3= 0.419 #weigth fraction of aromatic compounds.
 pG40 = 5.3
 pG50 = 0
-cL40 = pG40/Fluid().henry_H2 #inlet concentration of hydrogen in mol/cm^3 .
+cL40 = pG40/Fluid().Henry_H2 #inlet concentration of hydrogen in mol/cm^3 .
 cL50 = 0 #inlet concentration of hidrogen sulfite in mol/cm^3 .
 cL60 = 0 #inlet concentration of naphtneses in mol/cm^3.
 
 y0 = np.array([w0, w1, w2, w3, cL40, cL50, cL60, pG40, pG50])
 
-simulator = Simulator(y0, heterogeneous = False, n_points = 3)
+simulator = Simulator(y0, heterogeneous = True, n_points = 3)
 simulator.solve()
 
 surface_concentrations= simulator.get_surface_concentrations_profiles()

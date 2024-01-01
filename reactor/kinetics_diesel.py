@@ -1,6 +1,7 @@
 import numpy as np
-from reactor.data import Mm1
-from reactor.solubility import D1L, D2L, D4L
+from reactor.solubility import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S
+
+Mm1 = 441.9
 
 rhob = 0.8163 #bulk density in g/cm^3
 
@@ -97,26 +98,13 @@ def rHDA_fun(c,pH2, T, rhoL):
 
     return k(231.945, 80.1, T) * pH2 * c[A] - k(1.266e5, 112.6, T) * c[Np]
     #return k(1.041e5, 121.40, T) * pH2 * c[A]*Mm1/rhoL - k(8.805e9, 186.40, T) * (1 - Mm1/rhoL*c[A])
-    """Kmono = 0.7
-
-    kdir_line = 6.04e2*np.exp(-12140/T)*10*0.85
-
-    k_dir = kdir_line/4
-
-    k_inv = k_dir/Kmono
-
-    return k_dir*pH2*c[A] - k_inv*c[Np]"""
 
 
+def ft_reactants(r, c, pH2, T, rhoL, viscosity, vL, vH2, vH2S):
 
-
-
-
-def ft_reactants(r, c, pH2, T, rhoL):
-
-    diff_oil = D1L(T)
-    diff_H2 = D2L(T)
-    diff_H2S = D4L(T)
+    diff_oil = get_diffusion_oil(T, vL, viscosity) * 0.5/4
+    diff_H2 = get_diffusion_H2(T, viscosity, vL, vH2) * 0.5/4
+    diff_H2S = get_diffusion_H2S(T, viscosity, vL, vH2S) * 0.5/4
 
     rHDS = rHDS_fun(c,T)
     rHDN_NB = rHDN_NB_fun(c, T, rhoL)

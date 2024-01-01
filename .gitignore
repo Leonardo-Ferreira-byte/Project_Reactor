@@ -3,5 +3,5 @@ dist
 venv
 *.egg-info/
 __pycache__
+*.ipynb
 /build
-/dist
