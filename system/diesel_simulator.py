@@ -1,7 +1,7 @@
 import numpy as np
 from system.fluid import Fluid
+from system.bvp import OrthogonalCollocation
 from correlations.kinetics_diesel import rHDS_fun, rHDN_NB_fun, rHDN_B_fun, rHDA_fun, ft_reactants, effective_reactions
-from correlations.bvp import OrthogonalCollocation
 from scipy.integrate import solve_ivp
 from scipy.optimize import root
 
