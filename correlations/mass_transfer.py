@@ -1,5 +1,5 @@
-from reactor.data import alfa1, alfa2
-from reactor.density_correlations import oil_density
+from correlations.data import alfa1, alfa2
+from correlations.density_correlations import oil_density
 
 def aS_fun(porosity, dp):
 

@@ -1,7 +1,7 @@
-from reactor.solubility import get_viscosity
-from reactor.mass_transfer import aS_fun, kiL_aL_fun, kiS_aS_fun
-from reactor.solubility import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S
-from reactor.data import roW, vH2, vH2S, get_API, get_volume_molar_oil
+from correlations.solubility import get_viscosity
+from correlations.mass_transfer import aS_fun, kiL_aL_fun, kiS_aS_fun
+from correlations.solubility import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S
+from correlations.data import roW, vH2, vH2S, get_API, get_volume_molar_oil
 
 
 def test_diffusion_coefficients():

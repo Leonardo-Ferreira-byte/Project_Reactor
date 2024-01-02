@@ -1,5 +1,5 @@
 import numpy as np
-from reactor.solubility import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S
+from correlations.solubility import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S
 
 Mm1 = 441.9
 
@@ -116,7 +116,7 @@ def ft_reactants(r, c, pH2, T, rhoL, viscosity, vL, vH2, vH2S):
     fNB =  1 * rHDN_NB / diff_oil
     fNNB = -1 * rHDN_B / diff_oil
     fA = 1 * rHDA / diff_oil
-    fH2 = (15 * rHDS * rhob + 6 * rHDN_NB + 2 * rHDN_B + 3 * rHDA) / diff_H2
+    fH2 = (15 * rHDS * rhob + 6 /6* rHDN_NB + 2 * rHDN_B + 3/3 * rHDA) / diff_H2
     fH2S = -9 * rHDS * rhob / diff_H2S
     fNp = -1 * rHDA/ diff_oil
 

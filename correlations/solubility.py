@@ -1,6 +1,6 @@
 import numpy as np
-from reactor.density_correlations import oil_density
-from reactor.data import Vn, Patm
+from correlations.density_correlations import oil_density
+from correlations.data import Vn, Patm
 
 def get_viscosity(T, API):
 

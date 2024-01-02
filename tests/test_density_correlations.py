@@ -1,4 +1,4 @@
-from reactor.density_correlations import oil_density
+from correlations.density_correlations import oil_density
 
 def teste_oil_density():
 
