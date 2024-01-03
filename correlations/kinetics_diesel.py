@@ -1,13 +1,10 @@
 import numpy as np
-from correlations.solubility import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S
-
-Mm1 = 441.9
-
-rhob = 0.8163 #bulk density in g/cm^3
+from correlations.mass_transfer import get_diffusion_oil, get_diffusion_H2, get_diffusion_H2S, get_rg, get_Dk, get_De
 
 # Component labels to use in arrays
 
 S, NNB, NB, A, H2, H2S, Np = np.arange(7)
+
 
 def k(k0, Ea, T, R=8.3145):
     """Calculate the cinetic constant of Arrhneius.
@@ -40,7 +37,7 @@ def fKH2S(T, k0=41769.8411, delta_Hads=2761, R=8.3145):
     return k0 * np.exp(delta_Hads / (R * T))
 
 
-def rHDS_fun(c,T):
+def rHDS_fun(c, T):
     """ Calculate the HDS reaction rate.
     Args:
         CS (float): Concentration of sulfur compounds in [mol/cm^3].
@@ -55,7 +52,7 @@ def rHDS_fun(c,T):
     return k(4.266e9, 131.99, T) * c[S] * c[H2]**0.45/(1 + fKH2S(T) * c[H2S])**2
 
 
-def rHDN_B_fun(c, T, rhoL):
+def rHDN_B_fun(c, T, rhoL, Mm):
     """ Calculate the HDN_B reaction rate.
     Args:
         CN_NB (float): Concentration of non-basic-nitrogen compounds in [mol/cm^3].
@@ -66,11 +63,11 @@ def rHDN_B_fun(c, T, rhoL):
         float: the HDN_NB reaction rate in [mol/cm^3.s].
     """
 
-    return  (k(3.62e6, 164.94, T) * (c[NNB] * Mm1/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm1/rhoL)**1.5)
-    #return (k(3.62e6, 164.94, T) * (c[NNB] * Mm1/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm1/rhoL)**1.5)*rhoL/Mm1
+    return (k(3.62e6, 164.94, T) * (c[NNB] * Mm/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm/rhoL)**1.5)
+    # return (k(3.62e6, 164.94, T) * (c[NNB] * Mm/rhoL)**1.5 - k(3.66e11, 204.34, T) * (c[NB] * Mm/rhoL)**1.5)*rhoL/Mm
 
 
-def rHDN_NB_fun(c, T, rhoL):
+def rHDN_NB_fun(c, T, rhoL, Mm):
     """ Calculate the HDN_NB reaction rate.
     Args:
         CN_NB (float): Concentration of non-basic-nitrogen compounds in [mol/cm^3].
@@ -80,11 +77,11 @@ def rHDN_NB_fun(c, T, rhoL):
         float: the HDN_B reaction rate in [mol/cm3.s].
     """
 
-    return (k(3.62e6, 164.94, T) * (c[NNB]* Mm1/rhoL)**1.5)
-    #return  (k(3.62e6, 164.94, T) * (c[NNB]* Mm1/rhoL)**1.5)*rhoL/Mm1
+    return (k(3.62e6, 164.94, T) * (c[NNB] * Mm/rhoL)**1.5)
+    # return  (k(3.62e6, 164.94, T) * (c[NNB]* Mm/rhoL)**1.5)*rhoL/Mm
 
 
-def rHDA_fun(c,pH2, T, rhoL):
+def rHDA_fun(c, pH2, T, rhoL):
     """ Calculate the HDA reaction rate.
     Args:
         pH2 (float): partial pressure of hydrogen in [MPa]
@@ -97,37 +94,46 @@ def rHDA_fun(c,pH2, T, rhoL):
     """
 
     return k(231.945, 80.1, T) * pH2 * c[A] - k(1.266e5, 112.6, T) * c[Np]
-    #return k(1.041e5, 121.40, T) * pH2 * c[A]*Mm1/rhoL - k(8.805e9, 186.40, T) * (1 - Mm1/rhoL*c[A])
+    # return k(1.041e5, 121.40, T) * pH2 * c[A]*Mm/rhoL - k(8.805e9, 186.40, T) * (1 - Mm/rhoL*c[A])
+    #return k(1.041e5, 121.40, T) * pH2 * c[A] - k(8.805e9, 186.40, T) * (c[Np])
 
 
-def ft_reactants(r, c, pH2, T, rhoL, viscosity, vL, vH2, vH2S):
 
-    diff_oil = get_diffusion_oil(T, vL, viscosity) * 0.5/4
-    diff_H2 = get_diffusion_H2(T, viscosity, vL, vH2) * 0.5/4
-    diff_H2S = get_diffusion_H2S(T, viscosity, vL, vH2S) * 0.5/4
+def ft_reactants(r, c, pH2, T, rhoL, rhob, viscosity, vL, vH2, vH2S, Vg, Sg, Mm, teta):
 
-    rHDS = rHDS_fun(c,T)
-    rHDN_NB = rHDN_NB_fun(c, T, rhoL)
-    rHDN_B = rHDN_B_fun(c, T, rhoL)
+    diff_oil = get_diffusion_oil(T, vL, viscosity)
+    diff_H2 = get_diffusion_H2(T, viscosity, vL, vH2)
+    diff_H2S = get_diffusion_H2S(T, viscosity, vL, vH2S)
+
+    rg = get_rg(Vg, Sg)
+    Dk = get_Dk(rg, T, Mm)
+    De_oil = get_De(diff_oil, Dk, teta)
+    De_H2 = get_De(diff_H2, Dk, teta)
+    De_H2S = get_De(diff_H2S, Dk, teta)
+
+
+
+    rHDS = rHDS_fun(c, T)
+    rHDN_NB = rHDN_NB_fun(c, T, rhoL, Mm)
+    rHDN_B = rHDN_B_fun(c, T, rhoL, Mm)
     rHDA = rHDA_fun(c, pH2, T, rhoL)
 
-
-    fS = 1 * rHDS * rhob / diff_oil
-    fNB =  1 * rHDN_NB / diff_oil
-    fNNB = -1 * rHDN_B / diff_oil
-    fA = 1 * rHDA / diff_oil
-    fH2 = (15 * rHDS * rhob + 6 /6* rHDN_NB + 2 * rHDN_B + 3/3 * rHDA) / diff_H2
-    fH2S = -9 * rHDS * rhob / diff_H2S
-    fNp = -1 * rHDA/ diff_oil
+    fS = 1 * rHDS * rhob / De_oil
+    fNB = 1 * rHDN_NB / De_oil
+    fNNB = -1 * rHDN_B / De_oil
+    fA = 1 * rHDA / De_oil
+    fH2 = (15 * rHDS * rhob + 6 * rHDN_NB + 6 * rHDN_B + 3 * rHDA) / De_H2
+    fH2S = -9 * rHDS * rhob / De_H2S
+    fNp = -1 * rHDA / De_oil
 
     return np.array([fS, fNB, fNNB, fA, fH2, fH2S, fNp])
 
 
-def effective_reactions(r, c, pH2, T, rhoL):
+def effective_reactions(r, c, pH2, T, rhoL, Mm):
 
-    rr1 = rHDS_fun(c,T)
-    rr2 = rHDN_NB_fun(c, T, rhoL)
-    rr3 = rHDN_B_fun(c, T, rhoL)
+    rr1 = rHDS_fun(c, T)
+    rr2 = rHDN_NB_fun(c, T, rhoL, Mm)
+    rr3 = rHDN_B_fun(c, T, rhoL, Mm)
     rr4 = rHDA_fun(c, pH2, T, rhoL)
 
     return np.array([rr1, rr2, rr3, rr4])

@@ -3,7 +3,7 @@ from correlations.mass_transfer import aS_fun
 
 class Reactor:
 
-    def __init__(self, z = 31.54, dp = 0.254,  reactor_diameter = 2.54):
+    def __init__(self, z = 31.54, dp = 0.254,  reactor_diameter = 2.54, Vg = 0.56, Sg = 0.175):
 
         self.z = z
         self.reactor_diameter = reactor_diameter
@@ -12,6 +12,8 @@ class Reactor:
         self.dp = dp
         self.porosity = self.get_bed_fraction(reactor_diameter, dp)
         self.aS = aS_fun(self.porosity, dp)
+        self.Vg = Vg
+        self.Sg = Sg
 
     @staticmethod
     def get_bed_fraction(reactor_diameter, dp):

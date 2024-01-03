@@ -22,18 +22,6 @@ def get_viscosity(T, API):
       T = T * 1.8
       a = 10.313 * np.log10(T - 460) - 36.447
       return 3.141e10 * (T - 460)**(-3.444) * ((np.log10(API))**a) / 100
- 
-def get_diffusion_oil(T, viscosity, vL):
-
-      return 8.93e-8 * vL**0.267 *T / vL**0.433 / viscosity / 100
-
-def get_diffusion_H2(T, viscosity, vL, vH2):
-
-      return 8.93e-8 * vL**0.267 * T / vH2**0.433 / viscosity / 100
-
-def get_diffusion_H2S(T, viscosity, vL, vH2S):
-
-      return 8.93e-8 * vL**0.267 * T/ vH2S**0.433 / viscosity / 100
 
 def lambda_H2(rho0, T):
 

@@ -5,6 +5,10 @@ from correlations.kinetics_diesel import rHDS_fun, rHDN_NB_fun, rHDN_B_fun, rHDA
 from scipy.integrate import solve_ivp
 from scipy.optimize import root
 
+#rhop = 0.8163 / (0.5)
+#Vg = 0.56
+#teta = 2 * Vg * rhop
+
 class SolidConcentrations(Fluid):
 
     def __init__(self, cl0, heterogeneous = False, n_points = 3, ivp_tol=1e-16, method = "lm", **options):
@@ -50,15 +54,15 @@ class SolidConcentrations(Fluid):
                 y0 = self.collocation.y
                 root_method = "hybr"
 
-            args_ft = (cs, cl[7], self.T, self.rhoL, self.viscosity, self.vL, vH2, vH2S)
+            args_ft = (cs, cl[7], self.T, self.rhoL, self.viscosity, self.rhob, self.vL, self.vH2, self.vH2S, self.reactor.Vg, self.reactor.Sg, self.Mm, self.teta)
             self.collocation.collocate(y0, args=args_ft, method=root_method)
 
-            args_reactions = (cl[7], self.T, self.rhoL)
+            args_reactions = (cl[7], self.T, self.rhoL, self.Mm)
             eff = self.collocation.effectiveness(effective_reactions, args_reactions)
 
         rHDS = rHDS_fun(cs,self.T)
-        rHDN_NB = rHDN_NB_fun(cs, self.T, self.rhoL)
-        rHDN_B = rHDN_B_fun(cs, self.T, self.rhoL)
+        rHDN_NB = rHDN_NB_fun(cs, self.T, self.rhoL, self.Mm)
+        rHDN_B = rHDN_B_fun(cs, self.T, self.rhoL, self.Mm)
         rHDA = rHDA_fun(cs, cl[7], self.T, self.rhoL)
 
         F = np.empty((7))
@@ -67,7 +71,7 @@ class SolidConcentrations(Fluid):
         F[1] =  1*eff[1] * rHDN_NB -  self.kSaS_oil * (cl[1] - cs[1])
         F[2] =  -1*eff[2] * rHDN_B -  self.kSaS_oil * (cl[2] - cs[2])
         F[3] =  1*eff[3] * rHDA -  self.kSaS_oil * (cl[3] - cs[3])
-        F[4] =  15*eff[0] * self.rhob * rHDS +6*eff[1] * rHDN_NB + 2*eff[2]*rHDN_B+3*eff[3] * rHDA   - self.kSaS_H2 * (cl[4] - cs[4])
+        F[4] =  15*eff[0] * self.rhob * rHDS +6 * eff[1] * rHDN_NB + 6 * eff[2]*rHDN_B + 3 * eff[3] * rHDA   - self.kSaS_H2 * (cl[4] - cs[4])
         F[5] =  -9 * eff[0] * self.rhob * rHDS   - self.kSaS_H2S * (cl[5] - cs[5])
         F[6] =  -1 * eff[3] * rHDA -  self.kSaS_oil * (cl[6] - cs[6])
 
@@ -171,10 +175,10 @@ class Simulator(Fluid):
                     y0 = self.concentrations.collocation.y
                     root_method = "hybr"
 
-                args_ft = (cs, self.p5G_profile[i], self.T, self.rhoL, self.viscosity, self.vL, vH2, vH2S)
+                args_ft = (cs, self.p5G_profile[i], self.T, self.rhoL, self.rhob, self.viscosity, self.vL, self.vH2, self.vH2S, self.reactor.Vg, self.reactor.Sg, self.Mm, self.teta)
                 self.concentrations.collocation.collocate(y0, args=args_ft, method=root_method)
 
-                args_reactions = (self.p5G_profile[i], self.T, self.rhoL)
+                args_reactions = (self.p5G_profile[i], self.T, self.rhoL, self.Mm)
                 eff = self.concentrations.collocation.effectiveness(effective_reactions, args_reactions)
 
             effectiveness_profiles = np.vstack((effectiveness_profiles , eff))
