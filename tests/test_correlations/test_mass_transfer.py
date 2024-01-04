@@ -12,6 +12,21 @@ def test_diffusion_coefficients():
     Mm = 420
     rho0 = 0.9146
     d15_6 = rho0 / roW
+    API = get_API(d15_6)
+    viscosity = get_viscosity(T, API)
+    vL = get_volume_molar_oil(T_MeABP, d15_6, Mm)
+    assert abs(get_diffusion_oil(T, viscosity, vL) - 3.41e-5) < 1e-7
+    assert abs(get_diffusion_H2(T, viscosity, vL, vH2) - 1.49e-4) < 1e-6
+    assert abs(get_diffusion_H2S(T, viscosity, vL, vH2S) - 1.23e-4) < 1e-6
+
+
+def test_transfer_coefficients():
+
+    T = 370 + 273.15
+    T_MeABP = (451 + 273.15)*1.8
+    Mm = 420
+    rho0 = 0.9146
+    d15_6 = rho0 / roW
     API = 22
     P = 10
     T = 370 + 273.15
@@ -34,18 +49,3 @@ def test_diffusion_coefficients():
     assert abs(kiS_aS_fun(D4, viscosity, rho0, P, T, GL, aS) - 6.17e-2) < 1e-4
 
 
-def test_diffusion_coefficients():
-
-    T = 370 + 273.15
-    T_MeABP = (451 + 273.15)*1.8
-    Mm = 420
-    rho0 = 0.9146
-    d15_6 = rho0 / roW
-    API = get_API(d15_6)
-    viscosity = get_viscosity(T, API)
-    vL = get_volume_molar_oil(T_MeABP, d15_6, Mm)
-    assert abs(get_diffusion_oil(T, viscosity, vL) - 3.41e-5) < 1e-7
-    assert abs(get_diffusion_H2(T, viscosity, vL, vH2) - 1.49e-4) < 1e-6
-    assert abs(get_diffusion_H2S(T, viscosity, vL, vH2S) - 1.23e-4) < 1e-6
-
-test_diffusion_coefficients()
