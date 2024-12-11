@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>density Correlations - My Docs</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "density Correlations";
+        var mkdocs_page_input_path = "correlations\\density_correlations.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> My Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../about/">About</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Correlations</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">density Correlations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../kinetics_diesel/">kinetics Diesel</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../mass_transfer/">mass Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../solubility/">solubility</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">system</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../system/">overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../system/bvp/">bvp</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../system/diesel_simulator/">diesel_simulator</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../system/fluid/">fluid</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../system/reactor/">reactor</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">simulations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../simulations/">overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../simulations/diesel/">diesel</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../../vacuum_gas_oil.md">vacum_gas_oil</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">My Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Correlations</li>
+      <li class="breadcrumb-item active">density Correlations</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>$$
+\left(0.167 + \left(16.181 \cdot 10^{-0.0425 \cdot \rho_0}\right)\right) \cdot \frac{P}{1000} - 0.01 \cdot \left(0.299 + \left(263 \cdot 10^{-0.0603 \cdot \rho_0}\right)\right) \cdot \left(\frac{P}{1000}\right)^2
+$$</p>
+<p>Density Correlations Module</p>
+<p>This module contains functions for calculating the corrections to oil density based on pressure and temperature, as well as the oil density itself. The calculations are based on standard conditions and use specific parameters for temperature and pressure adjustments.</p>
+<p>Functions</p>
+<p>deltarhoP(rho0, P)</p>
+<p>Description: Computes the correction to oil density based on pressure.</p>
+<p>Parameters:</p>
+<p>rho0: int or floatDensity at standard conditions (15.6°C, 101.3 kPa) in lb/ft³.</p>
+<p>P: int or floatPressure in psia.</p>
+<p>Returns:</p>
+<p>deltarhoP: floatDensity correction with pressure in lb/ft³.</p>
+<p>deltarhoT(rho0, P, T)</p>
+<p>Description: Computes the correction to oil density based on temperature.</p>
+<p>Parameters:</p>
+<p>rho0: int or floatDensity at standard conditions (15.6°C, 101.3 kPa) in lb/ft³.</p>
+<p>P: int or floatPressure in psia.</p>
+<p>T: int or floatTemperature in °R.</p>
+<p>Returns:</p>
+<p>deltarhoT: floatDensity correction with temperature in lb/ft³.</p>
+<p>oil_density(rho0, P, T)</p>
+<p>Description: Computes the oil density as a function of pressure and temperature.</p>
+<p>Parameters:</p>
+<p>rho0: int or floatDensity at standard conditions (15.6°C, 101.3 kPa) in g/cm³.</p>
+<p>P: int or floatPressure in Pa.</p>
+<p>T: int or floatTemperature in K.</p>
+<p>Returns:</p>
+<p>oil_density: floatOil density corrected for temperature and pressure in g/cm³.</p>
+<p>Notes</p>
+<p>The rho0 input for oil_density is converted from g/cm³ to lb/ft³ internally.</p>
+<p>Temperature T is converted from Kelvin to Rankine internally.</p>
+<p>Pressure P is converted from Pascal to psia relative to atmospheric pressure using the imported Patm constant.</p>
+<p>Dependencies</p>
+<p>The module imports Patm from correlations.data for pressure conversions.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data/" class="btn btn-neutral float-left" title="data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../kinetics_diesel/" class="btn btn-neutral float-right" title="kinetics Diesel">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../kinetics_diesel/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

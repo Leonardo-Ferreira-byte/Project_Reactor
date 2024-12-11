@@ -1,0 +1,24 @@
+site_name: My Docs
+nav:
+  - Home: index.md
+  - About: about.md
+  - Correlations:
+    - overview: correlations/index.md
+    - data: correlations/data.md
+    - density Correlations: correlations/density_correlations.md
+    - kinetics Diesel: correlations/kinetics_diesel.md
+    - mass Transfer: correlations/mass_transfer.md
+    - solubility: correlations/solubility.md
+  - system:
+    - overview: system/index.md
+    - bvp: system/bvp.md
+    - diesel_simulator: system/diesel_simulator.md
+    - fluid: system/fluid.md
+    - reactor: system/reactor.md
+  - simulations:
+    - overview: simulations/index.md
+    - diesel: simulations/diesel.md
+    - vacum_gas_oil: vacuum_gas_oil.md
+theme: readthedocs
+
+https://www.youtube.com/watch?v=1NdfYh-QzZ0
