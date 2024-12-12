@@ -18,7 +18,5 @@ nav:
   - simulations:
     - overview: simulations/index.md
     - diesel: simulations/diesel.md
-    - vacum_gas_oil: vacuum_gas_oil.md
+    - vacum_gas_oil: simulations/vacuum_gas_oil.md
 theme: readthedocs
-
-https://www.youtube.com/watch?v=1NdfYh-QzZ0
