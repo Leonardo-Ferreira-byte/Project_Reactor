@@ -2,16 +2,7 @@
 
 For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
-## Commands
+Nesse projeto foi criado um programa que simula a reação de hidrotratamento de dois tipos de óleo: óleo diesel e óleo de gás a vácuo.
+Ele é constituído de dois módulos: [correlations](correlations/index.md) e [system](system/index.md). No primeiro há funções que calculam propriedades importantes pra simulação e no segundo há classes responsáveis por fazer a simulação propriamente dita.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Na pasta [simulations](simulations/index.md) há arquivos jupyter que chamam as classes do módulo sistems para se realizar a simulação.

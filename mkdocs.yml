@@ -1,7 +1,6 @@
 site_name: My Docs
 nav:
   - Home: index.md
-  - About: about.md
   - Correlations:
     - overview: correlations/index.md
     - data: correlations/data.md
