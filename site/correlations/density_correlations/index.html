@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>density Correlations - My Docs</title>
+    <title>density correlations - My Docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "density Correlations";
+        var mkdocs_page_name = "density correlations";
         var mkdocs_page_input_path = "correlations\\density_correlations.md";
         var mkdocs_page_url = null;
       </script>
@@ -49,16 +49,18 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">density Correlations</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">density correlations</a>
+    <ul class="current">
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../kinetics_diesel/">kinetics Diesel</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../kinetics_diesel/">kinetics diesel</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../mass_transfer/">mass Transfer</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../mass_transfer/">mass transfer</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../solubility/">solubility</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">system</span></p>
+              <p class="caption"><span class="caption-text">System</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../system/">overview</a>
                   </li>
@@ -71,13 +73,13 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../system/reactor/">reactor</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">simulations</span></p>
+              <p class="caption"><span class="caption-text">Simulations</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../simulations/">overview</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../simulations/diesel/">diesel</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../simulations/vacuum_gas_oil/">vacum_gas_oil</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../simulations/vacuum_gas_oil/">vacuum gas oil</a>
                   </li>
               </ul>
       </div>
@@ -95,8 +97,9 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Correlations</li>
-      <li class="breadcrumb-item active">density Correlations</li>
+      <li class="breadcrumb-item active">density correlations</li>
     <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Leonardo-Fereira-byte/mkdocs-documentation/edit/master/docs/correlations/density_correlations.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -105,18 +108,27 @@
             <div class="section" itemprop="articleBody">
               
                 <p>$$
-\left(0.167 + \left(16.181 \cdot 10^{-0.0425 \cdot \rho_0}\right)\right) \cdot \frac{P}{1000} - 0.01 \cdot \left(0.299 + \left(263 \cdot 10^{-0.0603 \cdot \rho_0}\right)\right) \cdot \left(\frac{P}{1000}\right)^2
+\left(0.167 + \left(16.181 \cdot 10^{-0.0425 \cdot \rho_0}\right)\right) \cdot \frac{P}{1000} 
+- 0.01 \cdot \left(0.299 + \left(263 \cdot 10^{-0.0603 \cdot \rho_0}\right)\right) \cdot \left(\frac{P}{1000}\right)^2
 $$</p>
-<p>Density Correlations Module</p>
+<p>$$ \sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6} $$</p>
+<h1 id="density-correlations-module">Density Correlations Module</h1>
 <p>This module contains functions for calculating the corrections to oil density based on pressure and temperature, as well as the oil density itself. The calculations are based on standard conditions and use specific parameters for temperature and pressure adjustments.</p>
-<p>Functions</p>
-<p>deltarhoP(rho0, P)</p>
-<p>Description: Computes the correction to oil density based on pressure.</p>
-<p>Parameters:</p>
-<p>rho0: int or floatDensity at standard conditions (15.6°C, 101.3 kPa) in lb/ft³.</p>
-<p>P: int or floatPressure in psia.</p>
-<p>Returns:</p>
-<p>deltarhoP: floatDensity correction with pressure in lb/ft³.</p>
+<h1 id="functions">Functions</h1>
+<pre><code>deltarhoP(rho0, P)
+
+Description: Computes the correction to oil density based on pressure.
+
+Parameters:
+
+rho0: int or floatDensity at standard conditions (15.6°C, 101.3 kPa) in lb/ft³.
+
+P: int or floatPressure in psia.
+
+Returns:
+
+deltarhoP: floatDensity correction with pressure in lb/ft³.
+</code></pre>
 <p>deltarhoT(rho0, P, T)</p>
 <p>Description: Computes the correction to oil density based on temperature.</p>
 <p>Parameters:</p>
@@ -144,7 +156,7 @@ $$</p>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../data/" class="btn btn-neutral float-left" title="data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../kinetics_diesel/" class="btn btn-neutral float-right" title="kinetics Diesel">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../kinetics_diesel/" class="btn btn-neutral float-right" title="kinetics diesel">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -166,6 +178,10 @@ $$</p>
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/Leonardo-Fereira-byte/mkdocs-documentation" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
     
       <span><a href="../data/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
@@ -178,6 +194,7 @@ $$</p>
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

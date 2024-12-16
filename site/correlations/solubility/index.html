@@ -49,16 +49,16 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../density_correlations/">density Correlations</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../density_correlations/">density correlations</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../kinetics_diesel/">kinetics Diesel</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../kinetics_diesel/">kinetics diesel</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../mass_transfer/">mass Transfer</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../mass_transfer/">mass transfer</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">solubility</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">system</span></p>
+              <p class="caption"><span class="caption-text">System</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../system/">overview</a>
                   </li>
@@ -71,13 +71,13 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../system/reactor/">reactor</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">simulations</span></p>
+              <p class="caption"><span class="caption-text">Simulations</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../simulations/">overview</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../simulations/diesel/">diesel</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../simulations/vacuum_gas_oil/">vacum_gas_oil</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../simulations/vacuum_gas_oil/">vacuum gas oil</a>
                   </li>
               </ul>
       </div>
@@ -97,6 +97,7 @@
           <li class="breadcrumb-item">Correlations</li>
       <li class="breadcrumb-item active">solubility</li>
     <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Leonardo-Fereira-byte/mkdocs-documentation/edit/master/docs/correlations/solubility.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -104,12 +105,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                
+                <pre><code>def get_viscosity(T, API):
+    &quot;&quot;&quot;
+    Function to get the viscosity of oil (Glaso, 1980).
+
+    Parameters
+    ----------
+    API: float or int
+        API gravity of oil.
+
+    T: int or float
+        Temperature in K.
+
+    Returns
+    -------
+    mi_L: float
+        Viscosity of oil sulfite in g/(cm*s).
+    &quot;&quot;&quot;
+
+    T = T * 1.8
+    a = 10.313 * np.log10(T - 460) - 36.447
+    return 3.141e10 * (T - 460) ** (-3.444) * ((np.log10(API)) ** a) / 100
+</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../mass_transfer/" class="btn btn-neutral float-left" title="mass Transfer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../mass_transfer/" class="btn btn-neutral float-left" title="mass transfer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../../system/" class="btn btn-neutral float-right" title="overview">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -132,6 +154,10 @@
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
+        <span>
+          <a href="https://github.com/Leonardo-Fereira-byte/mkdocs-documentation" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
     
       <span><a href="../mass_transfer/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
@@ -144,6 +170,7 @@
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

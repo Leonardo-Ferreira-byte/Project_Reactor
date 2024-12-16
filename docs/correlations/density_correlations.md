@@ -1,15 +1,18 @@
 
 $$
-\left(0.167 + \left(16.181 \cdot 10^{-0.0425 \cdot \rho_0}\right)\right) \cdot \frac{P}{1000} - 0.01 \cdot \left(0.299 + \left(263 \cdot 10^{-0.0603 \cdot \rho_0}\right)\right) \cdot \left(\frac{P}{1000}\right)^2
+\left(0.167 + \left(16.181 \cdot 10^{-0.0425 \cdot \rho_0}\right)\right) \cdot \frac{P}{1000} 
+- 0.01 \cdot \left(0.299 + \left(263 \cdot 10^{-0.0603 \cdot \rho_0}\right)\right) \cdot \left(\frac{P}{1000}\right)^2
 $$
 
+$$ \sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6} $$
 
-Density Correlations Module
+
+# Density Correlations Module
 
 This module contains functions for calculating the corrections to oil density based on pressure and temperature, as well as the oil density itself. The calculations are based on standard conditions and use specific parameters for temperature and pressure adjustments.
 
-Functions
-
+# Functions
+```
 deltarhoP(rho0, P)
 
 Description: Computes the correction to oil density based on pressure.
@@ -23,6 +26,7 @@ P: int or floatPressure in psia.
 Returns:
 
 deltarhoP: floatDensity correction with pressure in lb/ft³.
+```
 
 deltarhoT(rho0, P, T)
 

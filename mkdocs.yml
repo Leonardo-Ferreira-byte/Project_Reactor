@@ -1,21 +1,25 @@
+
 site_name: My Docs
+repo_url: https://github.com/Leonardo-Fereira-byte/mkdocs-documentation
 nav:
   - Home: index.md
   - Correlations:
-    - overview: correlations/index.md
-    - data: correlations/data.md
-    - density Correlations: correlations/density_correlations.md
-    - kinetics Diesel: correlations/kinetics_diesel.md
-    - mass Transfer: correlations/mass_transfer.md
-    - solubility: correlations/solubility.md
-  - system:
-    - overview: system/index.md
-    - bvp: system/bvp.md
-    - diesel_simulator: system/diesel_simulator.md
-    - fluid: system/fluid.md
-    - reactor: system/reactor.md
-  - simulations:
-    - overview: simulations/index.md
-    - diesel: simulations/diesel.md
-    - vacum_gas_oil: simulations/vacuum_gas_oil.md
+      - overview: correlations/index.md
+      - data: correlations/data.md
+      - density correlations: correlations/density_correlations.md
+      - kinetics diesel: correlations/kinetics_diesel.md
+      - mass transfer: correlations/mass_transfer.md
+      - solubility: correlations/solubility.md
+  - System:
+      - overview: system/index.md
+      - bvp: system/bvp.md
+      - diesel_simulator: system/diesel_simulator.md
+      - fluid: system/fluid.md
+      - reactor: system/reactor.md
+  - Simulations:
+      - overview: simulations/index.md
+      - diesel: simulations/diesel.md
+      - vacuum gas oil: simulations/vacuum_gas_oil.md
 theme: readthedocs
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
