@@ -1,8 +1,8 @@
-dist
+#dist
 /venv
 venv
-*.egg-info/
-__pycache__
-utils.ipynb
-*.pdf
-/build
+# *.egg-info/
+# __pycache__
+# utils.ipynb
+#*.pdf
+site/

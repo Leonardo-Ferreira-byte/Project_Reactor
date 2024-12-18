@@ -20,8 +20,7 @@ nav:
       - overview: simulations/index.md
       - diesel: simulations/diesel.md
       - vacuum gas oil: simulations/vacuum_gas_oil.md
-theme: readthedocs
-# theme:
-#   name: material
+theme:
+  name: material
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
